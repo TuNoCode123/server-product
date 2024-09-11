@@ -60,7 +60,8 @@ class UserController {
   };
   public updateUser = async (req: Request, res: Response) => {
     try {
-      const response = await serviceUser.delUserById(req.body);
+      await deleteValue("response");
+      const response = await serviceUser.updateUser(req.body);
       const { status, ...restObject } = response;
       return res.status(status || 500).json(restObject);
     } catch (error) {

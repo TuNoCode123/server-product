@@ -73,10 +73,21 @@ class ServiceUser {
       };
     }
   };
-  public updateUser = async (user: Iuser): Promise<Iresponse<any>> => {
+  public updateUser = async ({
+    cloudinaryUrls,
+    ...restObject
+  }: any): Promise<Iresponse<any>> => {
     try {
-      const response: Iresponse<any> = await instance.put(`update-user`, {
-        ...user,
+      let response: Iresponse<any>;
+      if (cloudinaryUrls && cloudinaryUrls.length > 0) {
+        response = await instance.put(`update-user`, {
+          ...restObject,
+          image: cloudinaryUrls[0],
+        });
+        return response;
+      }
+      response = await instance.put(`update-user`, {
+        ...restObject,
       });
       return response;
     } catch (error) {

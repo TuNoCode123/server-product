@@ -26,18 +26,18 @@ export const uploadToCloudinary = async (
 ) => {
   try {
     const files: CloudinaryFile[] = req.files as CloudinaryFile[];
-    const { email, passWord, firstName, lastName, gender, ...restObject } =
-      req.body;
-    const isErrorExisted = checkVarErr({
-      email,
-      passWord,
-      firstName,
-      lastName,
-      gender,
-    });
-    if (isErrorExisted.EC == 1) {
-      return notFound(isErrorExisted.EM, res);
-    }
+    // const { email, passWord, firstName, lastName, gender, ...restObject } =
+    //   req.body;
+    // const isErrorExisted = checkVarErr({
+    //   email,
+    //   passWord,
+    //   firstName,
+    //   lastName,
+    //   gender,
+    // });
+    // if (isErrorExisted.EC == 1) {
+    //   return notFound(isErrorExisted.EM, res);
+    // }
     if (!files || files.length === 0) {
       return next();
     }

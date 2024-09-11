@@ -9,7 +9,7 @@ import { initRedis } from "./config/configRedis";
 initRedis();
 const corsOpts = {
   origin: ["http://localhost:5174", "http://localhost:5173"],
-  methods: ["GET", "POST", "OPTIONS"],
+  methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT"],
   allowedHeaders: ["Content-Type"],
   credentials: true,
 };
