@@ -6,8 +6,17 @@ export interface Iproduct {
   price: number;
   discount: number;
   totalPrices: number;
+  uuid?: string;
 }
 export interface IattributeProduct {
-  K: any;
+  k: any;
   v: any;
+  productId?: number;
+  id?: number;
+}
+
+export interface IdescriptionProduct {
+  html: string;
+  text: string;
+  productId: number;
 }

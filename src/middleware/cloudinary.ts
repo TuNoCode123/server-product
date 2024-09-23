@@ -26,22 +26,30 @@ export const uploadToCloudinary = async (
 ) => {
   try {
     const files: CloudinaryFile[] = req.files as CloudinaryFile[];
-    // const { email, passWord, firstName, lastName, gender, ...restObject } =
-    //   req.body;
-    // const isErrorExisted = checkVarErr({
-    //   email,
-    //   passWord,
-    //   firstName,
-    //   lastName,
-    //   gender,
-    // });
-    // if (isErrorExisted.EC == 1) {
-    //   return notFound(isErrorExisted.EM, res);
-    // }
+    const { type, productId } = req.body;
+    if (type == "addImageProduct" && !productId) {
+      return res.status(404).json({
+        EC: 1,
+        EM: "missing input product id",
+      });
+    }
     if (!files || files.length === 0) {
+      // const { email, passWord, firstName, lastName, gender, ...restObject } =
+      //   req.body;
+      // const isErrorExisted = checkVarErr({
+      //   email,
+      //   passWord,
+      //   firstName,
+      //   lastName,
+      //   gender,
+      // });
+      // if (isErrorExisted.EC == 1) {
+      //   return notFound(isErrorExisted.EM, res);
+      // }
       return next();
     }
     const cloudinaryUrls: string[] = [];
+    const publicIds: string[] = [];
     for (const file of files) {
       // const resizedBuffer: Buffer = await sharp(file.buffer)
       //   .resize({ width: 800, height: 800 })
@@ -65,8 +73,11 @@ export const uploadToCloudinary = async (
             return next(new Error("Cloudinary upload result is undefined"));
           }
           cloudinaryUrls.push(result.secure_url);
+          publicIds.push(result.public_id);
           if (cloudinaryUrls.length === files.length) {
             req.body.cloudinaryUrls = cloudinaryUrls;
+            req.body.id_cloundinary = result.public_id;
+            req.body.publicIds = publicIds;
             next();
           }
         }

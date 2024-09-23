@@ -11,3 +11,15 @@ export interface Iuser {
   image?: string;
   uuid?: string;
 }
+export interface Icategory {
+  id?: string;
+  nameVi: string;
+  nameEn: string;
+  parentId: string;
+  image: string;
+}
+export interface IimageProduct {
+  image: string;
+  publicId: string;
+  productId: number;
+}

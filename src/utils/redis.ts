@@ -56,6 +56,7 @@ export const deleteValue = async (label: string) => {
         EM: `redis not found ${label}`,
       };
     }
+    console.log("delete value success");
     return {
       EC: 0,
       EM: "OK",

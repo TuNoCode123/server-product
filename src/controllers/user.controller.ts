@@ -10,7 +10,6 @@ class UserController {
   public addUser = async (req: Request, res: Response) => {
     try {
       await deleteValue("response");
-      console.log("--->", req.body);
       const response = await serviceUser.addUser(req.body);
       return res.status(200).json(response);
     } catch (error) {
@@ -21,18 +20,18 @@ class UserController {
   };
   public getAllUsers = async (req: Request, res: Response) => {
     try {
-      const clientRedis = getRedis();
-      const { redis } = clientRedis;
-      if (redis) {
-        const getUsersInMem = await redis.get("response");
-        if (getUsersInMem) {
-          const response = JSON.parse(getUsersInMem);
-          const { status, ...restObject } = response;
-          return res.status(status || 500).json(restObject);
-        }
-      }
-      const response = await serviceUser.getAllUsers();
-      await redis?.set("response", JSON.stringify(response), "EX", 60);
+      // const clientRedis = getRedis();
+      // const { redis } = clientRedis;
+      // if (redis) {
+      //   const getUsersInMem = await redis.get("response");
+      //   if (getUsersInMem) {
+      //     const response = JSON.parse(getUsersInMem);
+      //     const { status, ...restObject } = response;
+      //     return res.status(status || 500).json(restObject);
+      //   }
+      // }
+      const response = await serviceUser.getAllUsers(req.query);
+      // await redis?.set("response", JSON.stringify(response), "EX", 60);
       const { status, ...restObject } = response;
       return res.status(status || 500).json(restObject);
     } catch (error) {

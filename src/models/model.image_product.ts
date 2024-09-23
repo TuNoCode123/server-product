@@ -19,6 +19,7 @@ class Image_Product extends Model {
   public static COLUMN_PRODUCT_ID = "productId" as string;
   public static COLUMN_IMAGE = "image" as string;
   public static COLUMN_ATTRIBUTE_ID = "attribute_id" as string;
+  public static COLUMN_PUBLIC_ID = "publicId" as string;
 
   @Column({
     type: DataType.INTEGER,
@@ -45,6 +46,12 @@ class Image_Product extends Model {
     field: Image_Product.COLUMN_IMAGE,
   })
   image!: string;
+
+  @Column({
+    type: DataType.STRING(255),
+    field: Image_Product.COLUMN_PUBLIC_ID,
+  })
+  publicId!: string;
 
   @ForeignKey(() => Attri_Product)
   @Column({

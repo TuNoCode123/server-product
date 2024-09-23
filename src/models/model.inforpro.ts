@@ -18,6 +18,7 @@ class infor_Product extends Model {
   public static COLUMN_PRODUCT_ID = "productId" as string;
   public static COLUMN_KEY = "k" as string;
   public static COLUMN_VALUE = "v" as string;
+  public static COLUMN_IMAGE = "image" as string;
 
   @Column({
     type: DataType.INTEGER,
@@ -50,5 +51,11 @@ class infor_Product extends Model {
     field: infor_Product.COLUMN_VALUE,
   })
   v!: string;
+
+  @Column({
+    type: DataType.STRING(255),
+    field: infor_Product.COLUMN_IMAGE,
+  })
+  image!: string;
 }
 export default infor_Product;

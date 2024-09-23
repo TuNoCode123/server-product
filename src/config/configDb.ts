@@ -5,6 +5,10 @@ import Attri_Product from "../models/model.attribute_pro";
 import Image_Product from "../models/model.image_product";
 import infor_Product from "../models/model.inforpro";
 import Category from "../models/model.category";
+import Inventory from "../models/model.inventory";
+import Reserve from "../models/model.reserve";
+import Reserve_Inventory from "../models/model.reserve-inventory";
+import Product_Description from "../models/model.productDescription";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -30,6 +34,10 @@ class Database {
           Image_Product,
           infor_Product,
           Category,
+          Inventory,
+          Reserve,
+          Reserve_Inventory,
+          Product_Description,
         ],
         logging: false,
         pool: {

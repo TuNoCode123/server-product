@@ -1,16 +1,17 @@
 import instance from "../helpers/axios";
 
 import { Iresponse } from "../interfaces/interface.res";
-import { Iuser } from "../interfaces/interface.user";
+import { deteteImageFromClound } from "../utils/deleteImage";
 
 class ServiceUser {
   public addUser = async (user: any): Promise<Iresponse<any>> => {
     try {
-      const { cloudinaryUrls, ...restObject } = user;
+      const { cloudinaryUrls, id_cloundinary, ...restObject } = user;
       if (cloudinaryUrls) {
         const response: Iresponse<any> = await instance.post("/singup", {
           ...restObject,
           image: user.cloudinaryUrls[0],
+          publicId: id_cloundinary,
         });
         return response;
       }
@@ -33,9 +34,13 @@ class ServiceUser {
       };
     }
   };
-  public getAllUsers = async (): Promise<Iresponse<any>> => {
+  public getAllUsers = async (pagination: any): Promise<Iresponse<any>> => {
     try {
-      const response: Iresponse<any> = await instance.get("/get-all-user");
+      const { page, limitPage } = pagination;
+
+      const response: Iresponse<any> = await instance.get(
+        `/get-all-user?page=${page}&limitPage=${limitPage}`
+      );
       return response;
     } catch (error) {
       if (error instanceof Error)
@@ -57,6 +62,7 @@ class ServiceUser {
       const response: Iresponse<any> = await instance.delete(
         `del-user-by-id?id=${id}`
       );
+      await deteteImageFromClound(response.data);
       return response;
     } catch (error) {
       if (error instanceof Error)
@@ -84,6 +90,7 @@ class ServiceUser {
           ...restObject,
           image: cloudinaryUrls[0],
         });
+        await deteteImageFromClound(response.data);
         return response;
       }
       response = await instance.put(`update-user`, {

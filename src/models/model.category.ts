@@ -19,8 +19,8 @@ class Category extends Model {
   public static COLUMN_NAME_VI = "nameVi" as string;
   public static COLUMN_NAME_EN = "nameEn" as string;
   public static COLUMN_PARENTS_ID = "parentId" as string;
+  public static COLUMN_PUBLICE_ID = "publicId" as string;
   public static COLUMN_IMAGE = "image" as string;
-  public static COLUMN_SORT = "sort" as string;
 
   @Column({
     type: DataType.INTEGER,
@@ -49,16 +49,16 @@ class Category extends Model {
   image!: string;
 
   @Column({
+    type: DataType.STRING(255),
+    field: Category.COLUMN_PUBLICE_ID,
+  })
+  publicId!: string;
+
+  @Column({
     type: DataType.INTEGER,
     field: Category.COLUMN_PARENTS_ID,
   })
   parentId!: string;
-
-  @Column({
-    type: DataType.INTEGER,
-    field: Category.COLUMN_SORT,
-  })
-  sort!: string;
 
   @HasMany(() => Products, {
     sourceKey: "id",
