@@ -13,21 +13,35 @@ class ProductController {
   ) => {
     try {
       const products: Iproduct[] = req.body.data;
-
+      const shopId = req.body.shopId;
+      if (!shopId || !products)
+        return res.status(404).json({
+          EC: 1,
+          EM: "missing input",
+        });
+      const qty: number[] = [];
       const newProducts = products.map((item, index) => {
+        delete item.uuid;
+        if (item.quantity) {
+          qty.push(item.quantity);
+        }
+
+        delete item.quantity;
         if (item.discount) {
           return {
             ...item,
             totalPrices: item.price * item.discount,
           };
         }
-        delete item.uuid;
         return {
           ...item,
         };
       });
-      console.log("new", newProducts);
-      const response = await serviceProduct.addProduct(newProducts);
+      const response = await serviceProduct.addProduct(
+        newProducts,
+        shopId,
+        qty
+      );
       const { ST, ...restObject } = response;
       return res.status(ST).json(restObject);
     } catch (error) {
@@ -249,6 +263,103 @@ class ProductController {
         });
       }
       const response = await serviceProduct.deleteImage(+id, +productId);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public addChildProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const response = await serviceProduct.addChildProduct(req.body);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getAllChildProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id } = req.query;
+      if (!id)
+        return res.status(404).json({
+          EC: 1,
+          EM: "missing input",
+        });
+
+      const response = await serviceProduct.getAllChildProduct(+id);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteChildProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id, productId } = req.query;
+      if (!id || !productId) {
+        return res.status(404).json({
+          EC: 1,
+          EM: "missing input",
+        });
+      }
+      const response = await serviceProduct.deleteChildProduct(+id, +productId);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public listingProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const response = await serviceProduct.listingProduct(req.query);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getSimilarProduct = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const response = await serviceProduct.getSimilarProduct(req.query);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public checkQuantity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const response = await serviceProduct.checkQuantity(req.query);
       const { ST, ...restObject } = response;
       return res.status(ST).json(restObject);
     } catch (error) {

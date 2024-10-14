@@ -61,7 +61,41 @@ class CategoriesController {
     next: NextFunction
   ) => {
     try {
-      const response = await serviceCategories.getAllcategoryNoPaginate();
+      const response = await serviceCategories.getAllcategoryNoPaginate(
+        req.query
+      );
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getCategoryById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id } = req.query;
+      if (!id)
+        return res.status(404).json({
+          EC: 1,
+          EM: "missing input",
+        });
+      const response = await serviceCategories.getAllcategoryById(+id);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getAllcategories = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const response = await serviceCategories.getAllCategories();
       const { ST, ...restObject } = response;
       return res.status(ST).json(restObject);
     } catch (error) {

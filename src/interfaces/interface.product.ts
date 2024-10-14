@@ -1,3 +1,5 @@
+import { Optional } from "sequelize";
+
 export interface Iproduct {
   id: any;
   nameEn: string;
@@ -7,6 +9,7 @@ export interface Iproduct {
   discount: number;
   totalPrices: number;
   uuid?: string;
+  quantity?: number;
 }
 export interface IattributeProduct {
   k: any;
@@ -20,3 +23,22 @@ export interface IdescriptionProduct {
   text: string;
   productId: number;
 }
+
+export interface IchildProduct {
+  k: any;
+  v: any;
+  productId?: number;
+  id?: number;
+  image: any;
+  quantity?: number;
+}
+
+export interface Ishop {
+  userId?: number;
+  id?: number;
+  image: any;
+  backlog: any;
+  name: any;
+  description: any;
+}
+export type IchildProductCreationAttributes = Optional<IchildProduct, "id">;

@@ -9,6 +9,8 @@ import Inventory from "../models/model.inventory";
 import Reserve from "../models/model.reserve";
 import Reserve_Inventory from "../models/model.reserve-inventory";
 import Product_Description from "../models/model.productDescription";
+import Seller from "../models/model.inforSeller";
+import Shop from "../models/model.Shop";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -38,6 +40,8 @@ class Database {
           Reserve,
           Reserve_Inventory,
           Product_Description,
+          Seller,
+          Shop,
         ],
         logging: false,
         pool: {

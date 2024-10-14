@@ -24,5 +24,13 @@ routerCategories.put(
   uploadToCloudinary,
   categoriesController.updateCategory
 );
+routerCategories.get(
+  "/get-all-category-by-id",
+  categoriesController.getCategoryById
+);
+routerCategories.get(
+  "/get-all-categories",
+  categoriesController.getAllcategories
+);
 
 export default routerCategories;

@@ -1,8 +1,10 @@
+import { Op } from "sequelize";
 import { Icategory } from "../interfaces/interface.user";
 import Category from "../models/model.category";
 import Products from "../models/model.product";
 import { db } from "../server";
 import { deteteImageFromClound } from "../utils/deleteImage";
+import Shop from "../models/model.Shop";
 
 class ServiceCategories {
   public creatCategory = async (category: any) => {
@@ -187,7 +189,7 @@ class ServiceCategories {
     try {
       const { cloudinaryUrls, id_cloundinary, id, publicId, ...restObject } =
         newCate;
-      console.log("id", id);
+      console.log("public id", publicId);
       if (cloudinaryUrls || id_cloundinary) {
         const [result] = await Category.update(
           {
@@ -202,7 +204,7 @@ class ServiceCategories {
             transaction: t,
           }
         );
-        if (result > 0) {
+        if (result > 0 && publicId) {
           await deteteImageFromClound(publicId.split("/")[1]);
         }
         t.commit();
@@ -242,14 +244,63 @@ class ServiceCategories {
       };
     }
   };
-  public getAllcategoryNoPaginate = async () => {
+  public getAllcategoryNoPaginate = async (query: any) => {
     try {
+      const { shopId } = query;
+      if (!shopId) {
+        return {
+          ST: 400,
+          EC: 1,
+          EM: "missing input",
+        };
+      }
       const res = await Category.findAll({
-        include: { model: Products, as: "cate_pro" },
+        include: {
+          model: Products,
+          as: "cate_pro",
+          include: [
+            {
+              model: Shop,
+              where: {
+                id: shopId,
+              },
+            },
+          ],
+        },
+        order: [["id", "ASC"]],
       });
       const condition = res && res.length > 0;
       return {
         ST: condition ? 200 : 400,
+        EC: condition ? 0 : 1,
+        EM: condition ? "OK" : "Failed",
+        data: res,
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          ST: 400,
+          EC: 1,
+          EM: error.message,
+        };
+      }
+      return {
+        ST: 400,
+        EC: 1,
+        EM: "ERROR at creatCategory",
+      };
+    }
+  };
+  public getAllcategoryById = async (parentId: number) => {
+    try {
+      const res = await Category.findAll({
+        where: {
+          parentId,
+        },
+      });
+      const condition = res && res.length > 0;
+      return {
+        ST: 200,
         EC: condition ? 0 : 1,
         EM: condition ? "OK" : "Failed",
         data: res,
@@ -263,6 +314,37 @@ class ServiceCategories {
       }
       return {
         ST: 400,
+        EM: "ERROR at creatCategory",
+      };
+    }
+  };
+
+  public getAllCategories = async () => {
+    try {
+      const res = await Category.findAll({
+        where: {
+          parentId: { [Op.eq]: null },
+        },
+        order: [["id", "ASC"]],
+      });
+      const condition = res && res.length > 0;
+      return {
+        ST: condition ? 200 : 400,
+        EC: condition ? 0 : 1,
+        EM: condition ? "OK" : "Failed",
+        data: res,
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          ST: 400,
+          EC: 1,
+          EM: error.message,
+        };
+      }
+      return {
+        ST: 400,
+        EC: 1,
         EM: "ERROR at creatCategory",
       };
     }

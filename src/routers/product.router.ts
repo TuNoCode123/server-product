@@ -32,9 +32,24 @@ routerProduct.get(
 
 routerProduct.delete("/delete-attribute", productController.deleteAttribute);
 routerProduct.put("/update-attribute", productController.updateAttribute);
-
 routerProduct.get("/get-image-of-product", productController.getImageOfProduct);
-
 routerProduct.delete("/delete-image", productController.deleteImage);
+routerProduct.post("/add-child-product", productController.addChildProduct);
+routerProduct.get(
+  "/get-all-child-product",
+  productController.getAllChildProduct
+);
+
+routerProduct.delete(
+  "/delete-child-product",
+  productController.deleteChildProduct
+);
+
+routerProduct.get("/listing-product", productController.listingProduct);
+routerProduct.get(
+  "/get-list-similar-product",
+  productController.getSimilarProduct
+);
+routerProduct.get("/check-quantity", productController.checkQuantity);
 
 export default routerProduct;

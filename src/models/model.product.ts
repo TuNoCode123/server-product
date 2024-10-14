@@ -1,6 +1,7 @@
 import {
   AllowNull,
   BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
@@ -15,6 +16,8 @@ import infor_Product from "./model.inforpro";
 import Category from "./model.category";
 import Inventory from "./model.inventory";
 import Product_Description from "./model.productDescription";
+import Seller from "./model.inforSeller";
+import Shop from "./model.Shop";
 
 @Table({
   tableName: Products.TABLE_NAME,
@@ -33,6 +36,7 @@ class Products extends Model {
   public static COLUMN_HOT = "hot" as string;
   public static COLUMN_CATEGORY_ID = "categoryId" as string;
   public static COLUMN_BRANCH = "branch" as string;
+  public static COLUMN_IMAGE = "image" as string;
 
   @Column({
     type: DataType.INTEGER,
@@ -59,6 +63,12 @@ class Products extends Model {
     field: Products.COLUMN_DESCRIPTION,
   })
   description!: string;
+
+  @Column({
+    type: DataType.STRING(255),
+    field: Products.COLUMN_IMAGE,
+  })
+  image!: string;
 
   @Column({
     type: DataType.STRING(255),
@@ -144,5 +154,8 @@ class Products extends Model {
     as: "pro_des",
   })
   pro_des!: String;
+
+  @BelongsToMany(() => Shop, () => Seller)
+  pro_Seller!: Shop[];
 }
 export default Products;

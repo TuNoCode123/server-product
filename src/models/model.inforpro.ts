@@ -4,10 +4,12 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasOne,
   Model,
   Table,
 } from "sequelize-typescript";
 import Products from "./model.product";
+import Inventory from "./model.inventory";
 
 @Table({
   tableName: infor_Product.TABLE_NAME,
@@ -56,6 +58,12 @@ class infor_Product extends Model {
     type: DataType.STRING(255),
     field: infor_Product.COLUMN_IMAGE,
   })
-  image!: string;
+  image!: String;
+
+  @HasOne(() => Inventory, {
+    sourceKey: "id",
+    as: "product_child_inventory",
+  })
+  quantity!: string;
 }
 export default infor_Product;
