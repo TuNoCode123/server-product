@@ -71,6 +71,30 @@ export const deleteValue = async (label: string) => {
     };
   }
 };
+
+export const setValueWithTime = async (
+  label: string,
+  value: string,
+  time: number
+) => {
+  try {
+    const { redis } = getRedis();
+    if (!redis) throw Error("redis not found");
+    await redis.set(label, value, "EX", time);
+    return {
+      EC: 0,
+      EM: "OK",
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+    console.log(error);
+    return {
+      EC: 99,
+    };
+  }
+};
 //
 export const redisLabel = {
   PRODUCT: "product",

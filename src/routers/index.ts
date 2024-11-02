@@ -6,13 +6,17 @@ import routerProduct from "./product.router";
 import routerCategories from "./categoris.router";
 import routerShop from "./shop.router";
 
+import routerPayment from "./payment.router";
+import routerOrder from "./order.router";
+
 const configRouter = (app: Application) => {
   // app.use(verifyUser);
   app.use("/api/v1", routerUser);
   app.use("/api/v1", routerProduct);
   app.use("/api/v1", routerCategories);
   app.use("/api/v1", routerShop);
-
+  app.use("/api/v1", routerOrder);
+  app.use("/api/v1", routerPayment);
   app.use(apiNotFound);
   app.use(finalErorr);
 };

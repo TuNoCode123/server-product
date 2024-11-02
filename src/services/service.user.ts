@@ -1,6 +1,7 @@
 import instance from "../helpers/axios";
+import { Imailer } from "../interfaces/interface.order";
 
-import { Iresponse } from "../interfaces/interface.res";
+import { Ires, Iresponse } from "../interfaces/interface.res";
 import { deteteImageFromClound } from "../utils/deleteImage";
 
 class ServiceUser {
@@ -130,6 +131,21 @@ class ServiceUser {
         EC: 1,
         EM: "Unknown error occurred",
         data: "",
+      };
+    }
+  };
+  public sendMailerForUser = async (mailer: Imailer): Promise<Ires> => {
+    try {
+      const res: Ires = await instance.post("send-mail-for-user", {
+        mailOptions: mailer,
+      });
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.log(error);
+      return {
+        EC: 1,
+        EM: "err",
       };
     }
   };

@@ -11,6 +11,16 @@ import Reserve_Inventory from "../models/model.reserve-inventory";
 import Product_Description from "../models/model.productDescription";
 import Seller from "../models/model.inforSeller";
 import Shop from "../models/model.Shop";
+import Cart from "../models/model.cart";
+import DetailCart from "../models/model.detailCart";
+import Coupon from "../models/model.coupon";
+import Order from "../models/model.order";
+import Order_Items from "../models/model.order_Items";
+import Payment from "../models/model.payment";
+import Coupon_Order from "../models/model.coupon_Order";
+import Rating from "../models/model.rating";
+import Comment from "../models/model.comment";
+import Image_Comment from "../models/model.image_comment";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -42,6 +52,16 @@ class Database {
           Product_Description,
           Seller,
           Shop,
+          Cart,
+          DetailCart,
+          Coupon,
+          Order,
+          Order_Items,
+          Payment,
+          Coupon_Order,
+          Rating,
+          Comment,
+          Image_Comment,
         ],
         logging: false,
         pool: {

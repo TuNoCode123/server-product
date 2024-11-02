@@ -18,6 +18,7 @@ import Inventory from "./model.inventory";
 import Product_Description from "./model.productDescription";
 import Seller from "./model.inforSeller";
 import Shop from "./model.Shop";
+import Rating from "./model.rating";
 
 @Table({
   tableName: Products.TABLE_NAME,
@@ -157,5 +158,11 @@ class Products extends Model {
 
   @BelongsToMany(() => Shop, () => Seller)
   pro_Seller!: Shop[];
+
+  @HasMany(() => Rating, {
+    sourceKey: "id",
+    as: "comment_Rating", // Thêm mối quan hệ để lấy tất cả phản hồi
+  })
+  comment_Rating!: Rating[];
 }
 export default Products;

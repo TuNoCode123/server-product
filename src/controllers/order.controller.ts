@@ -1,30 +1,21 @@
 import { NextFunction, Request, Response } from "express";
-import serviceShop from "../services/service.shop";
+import serviceOrder from "../services/service.order";
 
-class ShopController {
-  public createNewShop = async (
+class OrderController {
+  public getAllOrder = async (
     req: Request,
     res: Response,
     next: NextFunction
   ) => {
-    try {
-      const response = await serviceShop.createNewShop(req.body);
-      const { ST, ...restObject } = response;
-      return res.status(ST).json(restObject);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public findShop = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { userId } = req.query;
-      if (!userId)
-        return res.status(404).json({
+      if (!userId) {
+        return res.status(200).json({
           EC: 1,
-          EM: "missing input",
+          EM: "MISSING INPUT",
         });
-      const response = await serviceShop.findShop(+userId);
+      }
+      const response = await serviceOrder.getAllOrder(+userId);
       const { ST, ...restObject } = response;
       return res.status(ST).json(restObject);
     } catch (error) {
@@ -32,59 +23,76 @@ class ShopController {
     }
   };
 
-  public createCounpon = async (
+  public getDetailOrderById = async (
     req: Request,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      const response = await serviceShop.createCoupon(req.body);
-      const { ST, ...restObject } = response;
-      return res.status(ST).json(restObject);
-    } catch (error) {
-      next(error);
-    }
-  };
-  public getAllCoupon = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      const response = await serviceShop.getAllCoupon(req.query);
-      const { ST, ...restObject } = response;
-      return res.status(ST).json(restObject);
-    } catch (error) {
-      next(error);
-    }
-  };
-  public deleteCoupon = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      const { id } = req.query;
-      if (!id) {
-        return res.status(404).json({
+      const { orderId } = req.query;
+      if (!orderId) {
+        return res.status(200).json({
           EC: 1,
-          EM: "missing input",
+          EM: "MISSING INPUT",
         });
       }
-      const response = await serviceShop.deleteCoupon(+id);
+      const response = await serviceOrder.getDetailOrder(+orderId);
       const { ST, ...restObject } = response;
       return res.status(ST).json(restObject);
     } catch (error) {
       next(error);
     }
   };
-  public updateCoupon = async (
+
+  public cancelOrder = async (
     req: Request,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      const response = await serviceShop.updateCoupon(req.body);
+      const { orderId } = req.query;
+      if (!orderId) {
+        return res.status(200).json({
+          EC: 1,
+          EM: "MISSING INPUT",
+        });
+      }
+      const response = await serviceOrder.cancelOrder(+orderId);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getAllOrderForShop = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { shopId } = req.query;
+      if (!shopId) {
+        return res.status(200).json({
+          EC: 1,
+          EM: "MISSING INPUT",
+        });
+      }
+      const response = await serviceOrder.getAllOrderForShop(+shopId);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public transmissStateOrder = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const response = await serviceOrder.stansmissState(req.body);
       const { ST, ...restObject } = response;
       return res.status(ST).json(restObject);
     } catch (error) {
@@ -92,4 +100,4 @@ class ShopController {
     }
   };
 }
-export default new ShopController();
+export default new OrderController();

@@ -11,4 +11,9 @@ routerShop.post(
   shopController.createNewShop
 );
 routerShop.get("/find-shop", shopController.findShop);
+routerShop.post("/create-coupon", shopController.createCounpon);
+routerShop.get("/get-all-counpon", shopController.getAllCoupon);
+routerShop.delete("/delete-coupon", shopController.deleteCoupon);
+routerShop.put("/update-coupon", shopController.updateCoupon);
+
 export default routerShop;

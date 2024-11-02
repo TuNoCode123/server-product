@@ -23,3 +23,15 @@ export interface IimageProduct {
   publicId: string;
   productId: number;
 }
+export interface Icounpon {
+  dateTo: any;
+  description: string;
+  discount: number;
+  limit: number;
+  status: string;
+  type: string;
+  condition: number;
+  id: number;
+  code_type: any;
+  code_status: any;
+}

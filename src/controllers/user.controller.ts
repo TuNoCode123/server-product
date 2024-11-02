@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { badRequest, notFound } from "../helpers/err";
 import { checkVarErr } from "../utils/error";
 import serviceUser from "../services/service.user";
@@ -78,6 +78,16 @@ class UserController {
       if (error instanceof Error) {
         return badRequest(error.message, res);
       }
+    }
+  };
+  public updateImageUser = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+    } catch (error) {
+      next(error);
     }
   };
 }

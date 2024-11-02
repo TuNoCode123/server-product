@@ -2,7 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL: process.env.URL_SSO ?? "something wrong",
-  timeout: process.env.TIMEOUT ? +process.env.TIMEOUT : 2000,
+  timeout: 10000,
 });
 instance.interceptors.request.use(
   function (config) {

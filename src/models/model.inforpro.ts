@@ -10,6 +10,7 @@ import {
 } from "sequelize-typescript";
 import Products from "./model.product";
 import Inventory from "./model.inventory";
+import Order_Items from "./model.order_Items";
 
 @Table({
   tableName: infor_Product.TABLE_NAME,
@@ -65,5 +66,11 @@ class infor_Product extends Model {
     as: "product_child_inventory",
   })
   quantity!: string;
+
+  @HasOne(() => Order_Items, {
+    sourceKey: "id",
+    as: "product_child_order",
+  })
+  product_child_order!: string;
 }
 export default infor_Product;

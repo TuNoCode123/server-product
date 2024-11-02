@@ -266,8 +266,8 @@ class ServiceProduct {
       const [affectRows, updatedProduct] = await Products.update(
         {
           ...restObject,
-          totalPrices: restObject.price
-            ? restObject.price
+          totalPrices: restObject.totalPrices
+            ? restObject.totalPrices
             : isExistedProductInPostgres.totalPrices,
         },
         {
@@ -1094,10 +1094,9 @@ class ServiceProduct {
   public checkQuantity = async (query: any) => {
     try {
       const { productId, productChildId, quantity } = query;
-      console.log(productId, quantity);
+
       let res: any;
       if (productChildId != "undefined") {
-        console.log("1");
         res = await Inventory.findOne({
           where: {
             productId,

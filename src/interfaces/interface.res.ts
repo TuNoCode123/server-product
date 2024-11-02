@@ -4,3 +4,7 @@ export interface Iresponse<T> {
   data: T;
   status?: number;
 }
+export interface Ires {
+  EC: number;
+  EM: string;
+}

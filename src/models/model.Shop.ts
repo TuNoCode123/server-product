@@ -5,6 +5,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from "sequelize-typescript";
@@ -12,6 +13,7 @@ import Products from "./model.product";
 import Inventory from "./model.inventory";
 import Reserve_Inventory from "./model.reserve-inventory";
 import Seller from "./model.inforSeller";
+import Order_Items from "./model.order_Items";
 
 @Table({
   tableName: Shop.TABLE_NAME,
@@ -79,5 +81,11 @@ class Shop extends Model {
 
   @BelongsToMany(() => Products, () => Seller)
   shop_Sellers!: Products[];
+
+  @HasMany(() => Order_Items, {
+    sourceKey: "id",
+    as: "shop_Orders",
+  })
+  shop_Orders!: String;
 }
 export default Shop;
