@@ -22,6 +22,9 @@ import {
   generateEmailContentShipping,
 } from "../utils/formatContentMailer";
 import { setValueWithTime } from "../utils/redis";
+import Rating from "../models/model.rating";
+import Comment from "../models/model.comment";
+import Image_Comment from "../models/model.image_comment";
 class OrderService {
   public createOrder = async (
     order: Iorder,
@@ -513,6 +516,7 @@ class OrderService {
         };
       }
       const ordersWithItems = exsitedOrder.toJSON();
+
       // const res = await Order_Items.findOne({
       //   where: {
       //     orderId,
@@ -565,14 +569,40 @@ class OrderService {
         }
       });
 
-      const temp = ordersWithItems.items_Orders.map((item: any) => {
-        return {
-          ...item,
-          status_Allcodes: statusOrderItem.data.filter(
-            (status: any) => status.keyMap === item.status
-          )[0],
-        };
-      });
+      const temp = await Promise.all(
+        ordersWithItems.items_Orders.map(async (item: any) => {
+          let getComment: any;
+          if (item.isComment == 1) {
+            getComment = await Rating.findOne({
+              where: {
+                orderId: item.orderId,
+                productId: item.productId,
+                productChildId: item.productChildId,
+              },
+              include: [
+                {
+                  model: Comment,
+                  as: "comment_rating",
+                  where: { userId: ordersWithItems.userId },
+                  include: [
+                    {
+                      model: Image_Comment,
+                      as: "image_comment",
+                    },
+                  ],
+                },
+              ],
+            });
+          }
+          return {
+            ...item,
+            status_Allcodes: statusOrderItem.data.filter(
+              (status: any) => status.keyMap === item.status
+            )[0],
+            getComment,
+          };
+        })
+      );
 
       return {
         ST: 200,

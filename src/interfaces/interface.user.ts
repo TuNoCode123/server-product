@@ -35,3 +35,42 @@ export interface Icounpon {
   code_type: any;
   code_status: any;
 }
+export interface Iratinng {
+  id?: number;
+  productId: number;
+  productChildId: number;
+  orderId: number;
+  star: number;
+  comment: string;
+  parentId?: number;
+  rating_comment?: Icomment[];
+  userId: number;
+  removeImageExisted: any[];
+}
+export interface Icomment {
+  id: number;
+  ratingId: number;
+  content: string;
+  userId: number;
+  image_comment: IimageComment[];
+}
+export interface IimageComment {
+  id: number;
+  commentId: number;
+  image: string;
+  publicId: number;
+}
+export interface Iratings {
+  id: number;
+  productId: number;
+  productChildId: number;
+  orderId: number;
+  star: string;
+  status: null;
+  content: null;
+  totalLike: number;
+  totalResponse: number;
+  createdAt: string;
+  updatedAt: string;
+  comment_rating: Icomment[];
+}

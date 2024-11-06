@@ -8,6 +8,7 @@ import routerShop from "./shop.router";
 
 import routerPayment from "./payment.router";
 import routerOrder from "./order.router";
+import routerComment from "./comment.router";
 
 const configRouter = (app: Application) => {
   // app.use(verifyUser);
@@ -17,6 +18,7 @@ const configRouter = (app: Application) => {
   app.use("/api/v1", routerShop);
   app.use("/api/v1", routerOrder);
   app.use("/api/v1", routerPayment);
+  app.use("/api/v1", routerComment);
   app.use(apiNotFound);
   app.use(finalErorr);
 };

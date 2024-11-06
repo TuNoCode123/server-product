@@ -19,6 +19,7 @@ import { deleteValue, getValue, redisLabel, setValue } from "../utils/redis";
 import Shop from "../models/model.Shop";
 import Seller from "../models/model.inforSeller";
 import Inventory from "../models/model.inventory";
+import Rating from "../models/model.rating";
 
 class ServiceProduct {
   public addProduct = async (product: any[], shopId: number, qty: number[]) => {

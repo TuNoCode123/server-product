@@ -28,6 +28,7 @@ class Order_Items extends Model {
   public static COLUMN_QUANTITY = "quantity" as string;
   public static COLUMN__PRICE = "price" as string;
   public static COLUMN__NOTE = "note" as string;
+  public static COLUMN__ISCOMMENT = "isComment" as string;
 
   @Column({
     type: DataType.INTEGER,
@@ -113,6 +114,13 @@ class Order_Items extends Model {
     field: Order_Items.COLUMN__NOTE,
   })
   note!: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    field: Order_Items.COLUMN__ISCOMMENT,
+    defaultValue: 0,
+  })
+  isComment!: string;
   //   @HasMany(() => DetailOrder_Items, {
   //     sourceKey: "id",
 

@@ -21,6 +21,7 @@ import Coupon_Order from "../models/model.coupon_Order";
 import Rating from "../models/model.rating";
 import Comment from "../models/model.comment";
 import Image_Comment from "../models/model.image_comment";
+import Reply from "../models/model.reply";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -62,6 +63,7 @@ class Database {
           Rating,
           Comment,
           Image_Comment,
+          Reply,
         ],
         logging: false,
         pool: {

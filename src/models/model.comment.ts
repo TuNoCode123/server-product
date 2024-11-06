@@ -16,6 +16,7 @@ import Seller from "./model.inforSeller";
 import Order_Items from "./model.order_Items";
 import Image_Comment from "./model.image_comment";
 import Rating from "./model.rating";
+import Reply from "./model.reply";
 
 @Table({
   tableName: Comment.TABLE_NAME,
@@ -26,7 +27,10 @@ class Comment extends Model {
   public static COLUMN_USER_ID = "userId" as string;
   public static COLUMN_RATING_ID = "ratingId" as string;
   public static COLUMN_CONTENT = "content" as string;
-  public static COLUMN_PARENT_ID = "parentId" as string;
+  public static COLUMN_FIRST_NAME = "firstName" as string;
+  public static COLUMN_LAST_NAME = "lastName" as string;
+  public static COLUMN_IMAGE = "image" as string;
+
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -41,6 +45,24 @@ class Comment extends Model {
   })
   userId!: number;
 
+  @Column({
+    type: DataType.STRING,
+    field: Comment.COLUMN_FIRST_NAME,
+  })
+  firstName!: string;
+
+  @Column({
+    type: DataType.STRING,
+    field: Comment.COLUMN_LAST_NAME,
+  })
+  lastName!: string;
+
+  @Column({
+    type: DataType.STRING,
+    field: Comment.COLUMN_IMAGE,
+  })
+  image!: string;
+
   @ForeignKey(() => Rating)
   @Column({
     type: DataType.INTEGER,
@@ -54,26 +76,6 @@ class Comment extends Model {
   })
   content!: string;
 
-  @ForeignKey(() => Comment)
-  @Column({
-    type: DataType.INTEGER,
-    field: Comment.COLUMN_PARENT_ID,
-  })
-  parentId!: string;
-
-  @BelongsTo(() => Comment, {
-    targetKey: "id",
-    foreignKey: "parentId",
-    as: "responser",
-  })
-  responser!: Comment;
-
-  @HasMany(() => Comment, {
-    sourceKey: "id",
-    as: "replies", // Thêm mối quan hệ để lấy tất cả phản hồi
-  })
-  replies!: Comment[];
-
   @HasMany(() => Image_Comment, {
     sourceKey: "id",
     as: "image_comment", // Thêm mối quan hệ để lấy tất cả phản hồi
@@ -86,5 +88,11 @@ class Comment extends Model {
     as: "rating_comment",
   })
   rating_comment!: Rating;
+
+  @HasMany(() => Reply, {
+    sourceKey: "id",
+    as: "replies_Comment", // Thêm mối quan hệ để lấy tất cả phản hồi
+  })
+  replies_Comment!: Reply[];
 }
 export default Comment;

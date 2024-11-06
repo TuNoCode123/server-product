@@ -4,6 +4,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   HasOne,
   Model,
   Table,
@@ -11,6 +12,7 @@ import {
 import Products from "./model.product";
 import Inventory from "./model.inventory";
 import Order_Items from "./model.order_Items";
+import Rating from "./model.rating";
 
 @Table({
   tableName: infor_Product.TABLE_NAME,
@@ -72,5 +74,11 @@ class infor_Product extends Model {
     as: "product_child_order",
   })
   product_child_order!: string;
+
+  @HasMany(() => Rating, {
+    sourceKey: "id",
+    as: "infor_Rating", // Thêm mối quan hệ để lấy tất cả phản hồi
+  })
+  infor_Rating!: Rating[];
 }
 export default infor_Product;

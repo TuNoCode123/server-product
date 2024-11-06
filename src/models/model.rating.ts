@@ -16,6 +16,7 @@ import Seller from "./model.inforSeller";
 import Order_Items from "./model.order_Items";
 import Comment from "./model.comment";
 import Order from "./model.order";
+import infor_Product from "./model.inforpro";
 
 @Table({
   tableName: Rating.TABLE_NAME,
@@ -24,6 +25,7 @@ class Rating extends Model {
   public static TABLE_NAME = "Rating" as string;
   public static COLUMN_ID = "id" as string;
   public static COLUMN_PRODUCT_ID = "productId" as string;
+  public static COLUMN_PRODUCT_CHILD_ID = "productChildId" as string;
   public static COLUMN_STAR = "star" as string;
   public static COLUMN_ORDER_ID = "orderId" as string;
   public static COLUMN_STATUS = "status" as string;
@@ -45,6 +47,13 @@ class Rating extends Model {
   })
   productId!: number;
 
+  @ForeignKey(() => infor_Product)
+  @Column({
+    type: DataType.INTEGER,
+    field: Rating.COLUMN_PRODUCT_CHILD_ID,
+  })
+  productChildId!: number;
+
   @ForeignKey(() => Order)
   @Column({
     type: DataType.INTEGER,
@@ -53,7 +62,7 @@ class Rating extends Model {
   orderId!: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     field: Rating.COLUMN_STAR,
   })
   star!: string;
@@ -94,6 +103,13 @@ class Rating extends Model {
     as: "pro_Comment",
   })
   pro_Comment!: Products;
+
+  @BelongsTo(() => infor_Product, {
+    targetKey: "id",
+    foreignKey: "productChildId",
+    as: "infoPro_Comment",
+  })
+  infoPro_Comment!: Products;
 
   @BelongsTo(() => Order, {
     targetKey: "id",
