@@ -82,6 +82,12 @@ class Shop extends Model {
   @BelongsToMany(() => Products, () => Seller)
   shop_Sellers!: Products[];
 
+  // @HasMany(() => Products, {
+  //   sourceKey: "id",
+  //   as: "shop_Orders",
+  // })
+  // shop_Orders!: String;
+
   @HasMany(() => Order_Items, {
     sourceKey: "id",
     as: "shop_Orders",

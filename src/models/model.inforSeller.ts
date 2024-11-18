@@ -35,7 +35,7 @@ class Seller extends Model {
     type: DataType.INTEGER,
     field: Seller.COLUMN_SHOP_ID,
   })
-  shopId!: string;
+  ShopId!: string;
 
   @ForeignKey(() => Products)
   @Column({

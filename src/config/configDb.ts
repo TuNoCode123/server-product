@@ -22,6 +22,7 @@ import Rating from "../models/model.rating";
 import Comment from "../models/model.comment";
 import Image_Comment from "../models/model.image_comment";
 import Reply from "../models/model.reply";
+import Liker from "../models/model.liker";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -64,6 +65,7 @@ class Database {
           Comment,
           Image_Comment,
           Reply,
+          Liker,
         ],
         logging: false,
         pool: {

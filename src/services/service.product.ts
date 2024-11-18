@@ -20,6 +20,7 @@ import Shop from "../models/model.Shop";
 import Seller from "../models/model.inforSeller";
 import Inventory from "../models/model.inventory";
 import Rating from "../models/model.rating";
+import Order_Items from "../models/model.order_Items";
 
 class ServiceProduct {
   public addProduct = async (product: any[], shopId: number, qty: number[]) => {
@@ -131,15 +132,26 @@ class ServiceProduct {
             },
           ],
         });
-        const setRedisProduct = await setValue(id, JSON.stringify(res));
+        if (!res) throw new Error("Product not existed");
+        const countForItem = await Order_Items.count({
+          where: {
+            productId: id,
+            status: "SOI4",
+          },
+        });
+        const plainObject = res.toJSON();
+        const setRedisProduct = await setValue(
+          id,
+          JSON.stringify({ ...plainObject, selledItem: countForItem })
+        );
         if (setRedisProduct && setRedisProduct.EC == 1) {
-          throw Error(setRedisProduct.EM);
+          throw new Error(setRedisProduct.EM);
         }
         return {
           ST: res ? 200 : 404,
           EC: res ? 0 : 1,
           EM: res ? "OK" : "product not existed",
-          data: res,
+          data: { ...plainObject, selledItem: countForItem },
         };
       }
       return {

@@ -65,6 +65,6 @@ class Category extends Model {
     foreignKey: "categoryId",
     as: "cate_pro",
   })
-  cate_pro!: String;
+  cate_pro!: Products[];
 }
 export default Category;

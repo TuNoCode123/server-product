@@ -124,7 +124,7 @@ class Products extends Model {
     foreignKey: "categoryId",
     as: "pro_cate",
   })
-  pro_cate!: string;
+  pro_cate!: Category;
 
   @HasMany(() => Attri_Product, {
     sourceKey: "id",

@@ -17,6 +17,7 @@ import Order_Items from "./model.order_Items";
 import Comment from "./model.comment";
 import Order from "./model.order";
 import infor_Product from "./model.inforpro";
+import Liker from "./model.liker";
 
 @Table({
   tableName: Rating.TABLE_NAME,
@@ -95,7 +96,13 @@ class Rating extends Model {
     sourceKey: "id",
     as: "comment_rating", // Thêm mối quan hệ để lấy tất cả phản hồi
   })
-  image_comment!: Comment[];
+  comment_rating!: Comment[];
+
+  @HasMany(() => Liker, {
+    sourceKey: "id",
+    as: "rating_liker", // Thêm mối quan hệ để lấy tất cả phản hồi
+  })
+  rating_liker!: Liker[];
 
   @BelongsTo(() => Products, {
     targetKey: "id",
@@ -109,7 +116,7 @@ class Rating extends Model {
     foreignKey: "productChildId",
     as: "infoPro_Comment",
   })
-  infoPro_Comment!: Products;
+  infoPro_Comment!: infor_Product;
 
   @BelongsTo(() => Order, {
     targetKey: "id",
