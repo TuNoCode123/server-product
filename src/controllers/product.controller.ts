@@ -366,5 +366,64 @@ class ProductController {
       next(error);
     }
   };
+
+  public getListProductSalest = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { limit } = req.query;
+      if (!process.env.LIMIT_SALE_PRODUCT) throw new Error("ENV NOT READY");
+      const result = limit ?? process.env.LIMIT_SALE_PRODUCT;
+      const response = await serviceProduct.getProductsSalest(+result);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getListProductNote = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { limit, page } = req.query;
+      if (!page) throw new Error("MISSING INPUT");
+      if (!process.env.LIMIT_SALE_PRODUCT) throw new Error("ENV NOT READY");
+      const result = limit ?? process.env.LIMIT_SALE_PRODUCT;
+      const response = await serviceProduct.getProductsNote(+result, +page);
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public searchItems = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { limit, page, search, price, date } = req.query;
+      if (!page || !search) throw new Error("MISSING INPUT");
+      if (!process.env.LIMIT_SALE_PRODUCT) throw new Error("ENV NOT READY");
+      const result = limit ?? process.env.LIMIT_SALE_PRODUCT;
+      const response = await serviceProduct.searchItems(
+        +result,
+        +page,
+        search,
+        price,
+        date
+      );
+      const { ST, ...restObject } = response;
+      return res.status(ST).json(restObject);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 export default new ProductController();

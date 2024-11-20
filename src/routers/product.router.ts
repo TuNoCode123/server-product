@@ -51,5 +51,12 @@ routerProduct.get(
   productController.getSimilarProduct
 );
 routerProduct.get("/check-quantity", productController.checkQuantity);
+routerProduct.get("/get-sealest", productController.getListProductSalest);
+routerProduct.get(
+  "/get-list-product-note",
+  productController.getListProductNote
+);
+
+routerProduct.get("/search-items", productController.searchItems);
 
 export default routerProduct;

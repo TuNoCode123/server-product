@@ -138,6 +138,7 @@ class ServiceShop {
           isType = true;
         }
       } else {
+        console.log(coupon.dateTo + submitDate);
         const res = await Coupon.create(
           {
             ...coupon,

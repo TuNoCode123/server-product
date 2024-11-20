@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import {
   IattributeProduct,
   IchildProduct,
@@ -21,9 +21,12 @@ import Seller from "../models/model.inforSeller";
 import Inventory from "../models/model.inventory";
 import Rating from "../models/model.rating";
 import Order_Items from "../models/model.order_Items";
-
+import moment from "moment-timezone";
+import unorm from "unorm";
+import { group } from "console";
 class ServiceProduct {
   public addProduct = async (product: any[], shopId: number, qty: number[]) => {
+    console.log("---->", shopId);
     const sequelize = await db.sequelize;
     if (!sequelize) {
       return {
@@ -47,13 +50,14 @@ class ServiceProduct {
       const res = await Products.bulkCreate(product, {
         transaction: t,
       });
+      await t.commit();
       const plainObjects = res.map((product) => product.toJSON());
 
       const customShop = [];
       const customInventory = [];
       for (let i = 0; i < plainObjects.length; i++) {
         const temp = {
-          shopId: shopId,
+          ShopId: shopId,
           productId: plainObjects[i].id,
         };
         const temp1 = {
@@ -63,12 +67,14 @@ class ServiceProduct {
         customInventory.push(temp1);
         customShop.push(temp);
       }
-      t.commit();
-      await Inventory.bulkCreate(customInventory);
+
+      await Inventory.bulkCreate(customInventory, {
+        transaction: t1,
+      });
       await Seller.bulkCreate(customShop, {
         transaction: t1,
       });
-      t1.commit();
+      await t1.commit();
       return {
         ST: res && res.length > 0 ? 200 : 400,
         EC: 0,
@@ -373,7 +379,7 @@ class ServiceProduct {
       const newLimit = limitPage == "undefined" ? limitEnv : limitPage;
       const newPage = page == "undefined" ? 0 : page;
       const currentPage = +newPage * +newLimit;
-      const rows = await Products.findAll({
+      const rows = await Products.findAndCountAll({
         include: [
           {
             model: Shop,
@@ -387,14 +393,14 @@ class ServiceProduct {
         nest: true,
         raw: true,
       });
-      const condition = rows && rows.length > 0;
+      const condition = rows && rows.count > 0;
       return {
         ST: condition ? 200 : 400,
         EC: condition ? 0 : 1,
         EM: condition ? "OK" : "Not Product",
         data: {
-          rows,
-          count: rows.length,
+          rows: rows.rows,
+          count: rows.count,
         },
       };
     } catch (error) {
@@ -1155,6 +1161,168 @@ class ServiceProduct {
           EM: "eccess quantity",
         };
       }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        return {
+          ST: 400,
+          EC: 1,
+          EM: error.message,
+        };
+      }
+      return {
+        ST: 400,
+        EC: 1,
+        EM: "ERROR at delete Product ById",
+      };
+    }
+  };
+  public getProductsSalest = async (limit: number) => {
+    try {
+      const res = await Products.findAll({
+        limit: limit,
+        order: [["totalPrices", "ASC"]],
+        include: [
+          {
+            model: Category,
+            as: "pro_cate",
+          },
+        ],
+      });
+      return {
+        ST: 200,
+        EC: 0,
+        EM: "OK",
+        data: res,
+      };
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        return {
+          ST: 400,
+          EC: 1,
+          EM: error.message,
+        };
+      }
+      return {
+        ST: 400,
+        EC: 1,
+        EM: "ERROR at delete Product ById",
+      };
+    }
+  };
+
+  public getProductsNote = async (limit: number, page: number) => {
+    try {
+      const ofset = limit * (page - 1);
+      const startOfDay = moment()
+        .startOf("day")
+        .format("YYYY-MM-DD 00:00:00+07:00");
+      const endOfDay = moment()
+        .endOf("day")
+        .format("YYYY-MM-DD 23:59:59+07:00");
+      const res = await Products.findAll({
+        where: {
+          [Op.or]: [
+            {
+              createdAt: {
+                [Op.between]: [startOfDay, endOfDay],
+              },
+            },
+            {
+              [Op.and]: [
+                Sequelize.where(
+                  // ép kiểu cho discount
+                  Sequelize.cast(Sequelize.col("discount"), "INTEGER"),
+                  {
+                    [Op.gt]: 0,
+                  }
+                ),
+              ],
+            },
+          ],
+        },
+        limit: limit,
+        offset: ofset,
+        order: [["totalPrices", "ASC"]],
+        include: [
+          {
+            model: Category,
+            as: "pro_cate",
+          },
+        ],
+      });
+
+      return {
+        ST: 200,
+        EC: res.length > 0 ? 0 : 1,
+        EM: res.length > 0 ? "OK" : "LIMIT PRODUCT!!!",
+        data: res,
+      };
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        return {
+          ST: 400,
+          EC: 1,
+          EM: error.message,
+        };
+      }
+      return {
+        ST: 400,
+        EC: 1,
+        EM: "ERROR at delete Product ById",
+      };
+    }
+  };
+  public searchItems = async (
+    limit: number,
+    page: number,
+    search: any,
+    price?: any,
+    date?: any
+  ) => {
+    try {
+      const Offset = (page - 1) * limit;
+      const normalizedQuery = unorm.nfd(search).replace(/[\u0300-\u036f]/g, "");
+      let products: any;
+      if (price) {
+        products = await Products.findAndCountAll({
+          where: Sequelize.where(
+            Sequelize.fn("unaccent", Sequelize.col("Products.nameVi")),
+            {
+              [Op.iLike]: `%${normalizedQuery.toLowerCase()}%`,
+            }
+          ),
+          order: [["totalPrices", `${price == "low" ? "ASC" : "DESC"}`]],
+          limit,
+          offset: Offset,
+          include: [
+            {
+              model: Category,
+              as: "pro_cate",
+            },
+          ],
+        });
+      } else {
+        products = await Products.findAndCountAll({
+          where: Sequelize.where(
+            Sequelize.fn("unaccent", Sequelize.col("nameVi")),
+            {
+              [Op.iLike]: `%${normalizedQuery.toLowerCase()}%`,
+            }
+          ),
+          limit,
+          offset: Offset,
+        });
+      }
+
+      return {
+        ST: 200,
+        EC: 0,
+        EM: "ok",
+        data: products,
+      };
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {

@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
   socket.on("updateMess", (data) => {
     const isOnline = userOnline.find((u) => u.userId == data.receiverId);
     if (isOnline && isOnline.socketId) {
-      console.log("update", data);
+      console.log("update", isOnline);
       io.to(isOnline.socketId).emit("updateNewMess", data.mess);
     }
   });
